@@ -1,0 +1,24 @@
+import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { AsforMap } from "@/components/map/AsforMap";
+import { getBranches } from "@/lib/branches";
+
+export async function MapSection() {
+  const branches = await getBranches();
+  return (
+    <section className="relative overflow-hidden bg-warm py-24">
+      <div className="container-site">
+        <Reveal>
+          <SectionHeading
+            eyebrow="خريطة حية"
+            title="أقرب إليكم... أينما كنتم"
+            sub="فروع ومواقع التغطية — اختر الفرع من القائمة لينتقل إليه مؤشّر الخريطة، واتصل مباشرة أو احصل على الاتجاهات."
+          />
+        </Reveal>
+        <Reveal delay={0.1}>
+          <AsforMap branches={branches} />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
