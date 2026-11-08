@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/ui/PageHero";
 import { GridSkeleton } from "@/components/ui/GridSkeleton";
 import { getWooCategory, getWooCategories } from "@/lib/woocommerce";
+import { plainWpText } from "@/lib/content";
+import { CropCircles } from "@/components/products/CropCircles";
 import { CategoryGrid } from "./grid";
 
 export async function generateStaticParams() {
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!category) return { title: "تصنيف غير موجود" };
   return {
     title: `${category.name} — أصناف البذور`,
-    description: category.description || `استعرض أصناف ${category.name} المتاحة من أليكس للمستلزمات الزراعية.`,
+    description: plainWpText(category.description ?? "") || `استعرض أصناف ${category.name} المتاحة من أليكس للمستلزمات الزراعية.`,
     alternates: { canonical: `/categories/${slug}` },
     openGraph: category.image?.src ? { images: [{ url: category.image.src }] } : undefined,
   };
@@ -48,7 +50,7 @@ async function CategoryDetail({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { slug } = await params;
-  const category = await getWooCategory(slug);
+  const [category, categories] = await Promise.all([getWooCategory(slug), getWooCategories()]);
   if (!category) notFound();
 
   return (
@@ -57,7 +59,7 @@ async function CategoryDetail({
         eyebrow={category.name}
         title={`أصناف ${category.name}`}
         sub={
-          category.description ||
+          plainWpText(category.description ?? "") ||
           `استعرض جميع الأصناف المتاحة تحت تصنيف «${category.name}» — بيانات حية من متجر الشركة.`
         }
       />
@@ -83,6 +85,13 @@ async function CategoryDetail({
       <Suspense fallback={<GridSkeleton label={`جارٍ تحميل أصناف ${category.name}…`} />}>
         <CategoryGrid slug={slug} searchParamsPromise={searchParams} categoryName={category.name} />
       </Suspense>
+      <section className="border-t border-line bg-mist py-16 sm:py-20" aria-labelledby="more-crops-title">
+        <div className="container-site">
+          <p className="mb-2 text-sm font-bold text-pine">تصفح حسب المحصول</p>
+          <h2 id="more-crops-title" className="heading-display mb-9 text-2xl text-deep sm:text-3xl">باقي المحاصيل وأصناف البذور</h2>
+          <CropCircles categories={categories} excludeId={category.id} layout="grid" />
+        </div>
+      </section>
     </>
   );
 }

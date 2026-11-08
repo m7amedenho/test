@@ -13,11 +13,11 @@ export async function SolutionsSection() {
   return (
     <section className="relative overflow-hidden bg-deep py-24 text-white">
       {/* مساحات عضوية خضراء خفيفة */}
-      <div className="pointer-events-none absolute inset-0 opacity-70" aria-hidden>
+      <div className="pointer-events-none absolute inset-0 opacity-0" aria-hidden>
         <div className="absolute -right-24 top-10 h-96 w-96 rounded-[48%_52%_35%_65%/55%_40%_60%_45%] bg-pine/70 blur-3xl animate-float-slower" />
         <div className="absolute -left-20 bottom-0 h-80 w-80 rounded-[62%_38%_55%_45%/45%_60%_40%_55%] bg-[#1d5c45]/60 blur-3xl animate-float-slow" />
       </div>
-      <svg viewBox="0 0 600 600" className="pointer-events-none absolute right-8 top-1/4 h-72 w-72 opacity-15 animate-spin-slower" aria-hidden>
+      <svg viewBox="0 0 600 600" className="pointer-events-none absolute right-8 top-1/4 h-72 w-72 opacity-0" aria-hidden>
         <circle cx="300" cy="300" r="240" fill="none" stroke="#C1E27A" strokeWidth="1" strokeDasharray="2 10" />
         <circle cx="300" cy="300" r="170" fill="none" stroke="#C1E27A" strokeWidth="1" strokeDasharray="2 6" />
       </svg>

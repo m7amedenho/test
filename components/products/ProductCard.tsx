@@ -2,10 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, MessageCircleQuestion } from "lucide-react";
 import type { WooProduct } from "@/types/wp";
+import { plainWpText } from "@/lib/content";
 
 /** كرت منتج — من بيانات WooCommerce الحقيقية (بدون أسعار وهمية) */
 export function ProductCard({ product, priority = false }: { product: WooProduct; priority?: boolean }) {
   const img = product.images?.[0];
+  const description = plainWpText(product.short_description || product.description || "");
+  const excerpt = description.length > 125 ? `${description.slice(0, 125).trimEnd()}…` : description;
   return (
     <Link
       href={`/products/${decodeURIComponent(product.slug)}`}
@@ -37,7 +40,7 @@ export function ProductCard({ product, priority = false }: { product: WooProduct
           {product.name}
         </h3>
         <p className="mt-1.5 line-clamp-2 text-[12px] leading-relaxed text-ink/50">
-          {product.short_description ? product.short_description.replace(/<[^>]*>/g, " ").trim() : "بيانات الصنف مُدارة من لوحة التحكم"}
+          {excerpt || "تعرّف على تفاصيل الصنف ومواصفاته"}
         </p>
         <div className="mt-auto flex items-center justify-between pt-4">
           <span className="text-[12.5px] font-bold text-ink/60">

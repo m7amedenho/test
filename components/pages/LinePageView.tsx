@@ -4,14 +4,12 @@ import { ArrowLeft, PhoneCall, Leaf, FlaskConical, ShieldCheck, Sprout, Package,
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { MeshBackground } from "@/components/botanical/MeshBackground";
-import { LeafGlyph, FloatingLeaves } from "@/components/botanical/Leaves";
+import { LeafGlyph } from "@/components/botanical/Leaves";
 import { getWpPage } from "@/lib/wordpress";
 import { extractSections, firstParagraph } from "@/lib/content";
-import { PRODUCT_LINES, type ProductLine, type SiteContact } from "@/lib/site";
+import { type ProductLine } from "@/lib/site";
 import { getSiteContact } from "@/lib/site";
 import { PICKS } from "@/lib/media";
-import { ProductCard } from "@/components/products/ProductCard";
-import { getWooProducts } from "@/lib/woocommerce";
 
 const ICONS = {
   sprout: Sprout,
@@ -61,9 +59,6 @@ export async function LinePageView({ line }: { line: ProductLine }) {
   const intro = page?.content?.rendered ? firstParagraph(page.content.rendered, 300) : "";
   const Icon = ICONS[line.icon];
 
-  // خط البذور مرتبط بمتجر الأصناف: نعرض منتجات حقيقية
-  const isSeeds = line.slug === "seeds";
-  const seedProducts = isSeeds ? (await getWooProducts()).slice(0, 8) : [];
 
   return (
     <>
@@ -111,25 +106,6 @@ export async function LinePageView({ line }: { line: ProductLine }) {
         </div>
       </section>
 
-      {isSeeds && seedProducts.length > 0 && (
-        <section className="bg-mist py-20">
-          <div className="container-site">
-            <div className="mb-8 flex items-end justify-between gap-4">
-              <h2 className="heading-display text-2xl text-deep md:text-3xl">أصناف البذور في متجرنا</h2>
-              <Link href="/products" className="inline-flex items-center gap-2 text-[13px] font-bold text-pine hover:underline">
-                كل الأصناف
-                <ArrowLeft size={14} />
-              </Link>
-            </div>
-            <FloatingLeaves className="opacity-60" />
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {seedProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </>
   );
 }

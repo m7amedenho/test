@@ -31,6 +31,18 @@ export function decodeEntities(text: string): string {
     });
 }
 
+/** وصف نصي نظيف لبطاقات المنتجات وبيانات الصفحة، دون وسوم أو كيانات HTML ظاهرة. */
+export function plainWpText(html: string): string {
+  return decodeEntities(
+    html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<\/(?:p|div|li|h[1-6]|br)>/gi, " ")
+      .replace(/<br\s*\/?>/gi, " ")
+      .replace(/<[^>]*>/g, " "),
+  ).replace(/\s+/g, " ").trim();
+}
+
 /** استخراج Couples أقسام (عنوان + نص) من HTML ووردبريس */
 export function extractSections(html: string | undefined): ContentSection[] {
   if (!html) return [];

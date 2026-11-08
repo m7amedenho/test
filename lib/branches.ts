@@ -10,13 +10,13 @@ export interface CompanyBranch {
   person?: string; // اسم المسؤول إن وُجد
   coords: { lat: number; lng: number } | null;
   approx: boolean; // الإحداثيات تقريبية (مركز مدينة) وليست إحداثيات مدققة ميدانيًا
+  governorates: string[]; // أسماء المحافظات المطابقة لحدود GeoJSON
 }
 
 /** مطابقة المنطقة بمركز مدينة حقيقي — تُعلَّم كـ"تقريبية" لأنها ليست إحداثيات مدققة */
 const CITY_COORDS: { keys: string[]; lat: number; lng: number }[] = [
   { keys: ["برج العرب"], lat: 30.9182, lng: 29.6164 },
   { keys: ["العامرية", "الاميريه", "الاميرية"], lat: 31.0168, lng: 29.5937 },
-  { keys: ["البنجر"], lat: 30.5165, lng: 30.231 },
   { keys: ["كفرالدوار", "الدلنجات", "البستان"], lat: 31.1317, lng: 29.84 },
   { keys: ["العياط"], lat: 29.715, lng: 30.878 },
   { keys: ["الفيوم", "سنورس"], lat: 29.308, lng: 30.8415 },
@@ -34,6 +34,26 @@ const CITY_COORDS: { keys: string[]; lat: number; lng: number }[] = [
   { keys: ["النوبارية", "النوباريه"], lat: 30.8863, lng: 29.5788 },
   { keys: ["البحيرة", "البحيره"], lat: 31.0341, lng: 30.4732 },
 ];
+
+const COVERAGE: { keys: string[]; governorates: string[] }[] = [
+  { keys: ["البستان", "الدلنجات", "كفرالدوار"], governorates: ["Beheira Governorate"] },
+  { keys: ["اسيوط", "أسيوط"], governorates: ["Asyut Governorate", "Minya Governate"] },
+  { keys: ["جرجا", "قنا"], governorates: ["Sohag Governorate", "Qena Governorate"] },
+  { keys: ["بلطيم", "المنصورة"], governorates: ["Kafr el-Sheikh Governorate", "Dakahlia Governorate"] },
+  { keys: ["دمياط", "الإسماعيلية", "الاسماعيلية"], governorates: ["Damietta Governorate", "Ismailia Governorate"] },
+  { keys: ["العياط", "الفيوم"], governorates: ["Giza Governorate", "Faiyum Governorate", "Beni Suef Governorate"] },
+  { keys: ["الاقصر", "الأقصر", "اسوان", "أسوان"], governorates: ["Luxor Governate", "Aswan Governorate"] },
+  { keys: ["النوبارية", "النوباريه", "البحيرة"], governorates: ["Beheira Governorate"] },
+  { keys: ["المنيا", "بنى سويف", "بني سويف"], governorates: ["Minya Governate", "Beni Suef Governorate"] },
+];
+
+function isOffice(label: string) {
+  return /برج العرب|النهضة|النهضه/.test(label);
+}
+
+function coverageFor(label: string) {
+  return COVERAGE.find((area) => area.keys.some((key) => label.includes(key)))?.governorates ?? [];
+}
 
 function coordsFor(label: string): { lat: number; lng: number } | null {
   for (const c of CITY_COORDS) {
@@ -91,15 +111,19 @@ export async function getBranches(): Promise<CompanyBranch[]> {
       .replace(/م\/|د\//g, " ")
       .replace(/\s+/g, " ")
       .trim();
+    if (/البنجر/.test(label)) {
+      headerLines = [];
+      phones = [];
+      return;
+    }
     const coords = coordsFor(label);
     const personFinal = isManager ? person : undefined;
 
-    if (!coords) {
+    if (!coords && !coverageFor(label).length) {
       // عنصر بلا إحداثيات معروفة — نعرضه فقط إن هو تابع لإدخال سابق (مدير مبيعات لنفس المنطقة)
       const prev = out[out.length - 1];
       if (prev) {
         prev.person ??= personFinal;
-        prev.type = personFinal ? "sales-manager" : prev.type;
         prev.phones = [...new Set([...prev.phones, ...phones])];
       }
       headerLines = [];
@@ -117,10 +141,11 @@ export async function getBranches(): Promise<CompanyBranch[]> {
         id: `br-${out.length}`,
         label,
         phones: [...new Set(phones)],
-        type: personFinal ? "sales-manager" : /مدير مبيعات/.test(header) ? "sales-manager" : "branch",
+        type: isOffice(label) ? "branch" : "sales-manager",
         person: personFinal,
-        coords,
-        approx: true,
+        coords: isOffice(label) ? coords : null,
+        approx: isOffice(label),
+        governorates: isOffice(label) ? [] : coverageFor(label),
       });
     }
     headerLines = [];

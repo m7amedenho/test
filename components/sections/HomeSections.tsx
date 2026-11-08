@@ -1,4 +1,3 @@
-import { Hero } from "@/components/hero/Hero";
 import { IntroSection } from "@/components/sections/IntroSection";
 import { StoryBento, type StoryChapter } from "@/components/storytelling/StoryBento";
 import { StatsBar } from "@/components/sections/StatsBar";
@@ -11,8 +10,7 @@ import { MapSection } from "@/components/sections/MapSection";
 import { PartnersSection } from "@/components/sections/PartnersSection";
 import { NewsSection } from "@/components/sections/NewsSection";
 import { ContactCTA } from "@/components/sections/ContactCTA";
-import { SectionWave } from "@/components/botanical/MeshBackground";
-import { PICKS } from "@/lib/media";
+import { LANDING_IMAGES } from "@/lib/media";
 
 // فصول قصة الشركة — نصوصها من محتوى الشركة الحقيقي (بدون اختراع ميزانيات أو تواريخ)
 const CHAPTERS: StoryChapter[] = [
@@ -20,37 +18,37 @@ const CHAPTERS: StoryChapter[] = [
     numeral: "01",
     title: "الجذور الزراعية",
     text: "شركة رائدة في تجارة البذور والشتلات والمستلزمات الزراعية عالية الجودة، تلبّي احتياجات الأسواق والعملاء في مصر والشرق الأوسط.",
-    image: PICKS.heroField,
+    image: LANDING_IMAGES.field,
   },
   {
     numeral: "02",
     title: "البذور والحلول الزراعية",
     text: "نوفر أجود أصناف الخضراوات والفواكه على مدار العام، بدعم فني متواصل للمزارعين والشركات والمشاتل في جميع المحافظات.",
-    image: PICKS.peat,
+    image: LANDING_IMAGES.rye,
   },
   {
     numeral: "03",
     title: "تطوير المشاتل — مشاتل عصفور",
     text: "سلسلة مشاتل الشركة منتشرة في معظم محافظات مصر، منتجة شتلات هجينة عالية الجودة بالاعتماد شبه الكامل على مواردها الخاصة.",
-    image: PICKS.seedlings,
+    image: LANDING_IMAGES.greenhouse,
   },
   {
     numeral: "04",
     title: "البحث والتجارب العلمية",
     text: "فريق متخصص يجري التجارب على جميع المنتجات داخل محطة التجارب الخاصة بالشركة، لدراسة النقاء والإنبات وسلوك النبات في مناطق مختلفة.",
-    image: PICKS.researchLab,
+    image: LANDING_IMAGES.seedlings,
   },
   {
     numeral: "05",
     title: "التهجين والتطوير الوراثي",
     text: "قسم علمي جديد يجمع خطوط التحسين الوراثي والتهجين وتجارب الحقل تحت إدارة منظمة — من خاصية علمية إلى أداء يثبه التربة.",
-    image: PICKS.trialField,
+    image: LANDING_IMAGES.grain,
   },
   {
     numeral: "06",
     title: "مستقبل الزراعة",
     text: "شعارنا «من أجل مستقبل أفضل» — نمضي نحو زراعة أكثر ذكاءً واعتمادًا على العلم لنصنع مستقبل الزراعة مع عملائنا وشركائنا.",
-    image: PICKS.nursery,
+    image: LANDING_IMAGES.corn,
   },
 ];
 
@@ -59,6 +57,7 @@ export function HomeSections() {
     <>
       <IntroSection />
       <StatsBar />
+      <LinesEcosystem />
       {/* القسم 03 — قصة الشركة بشبكة Bento */}
       <section className="relative bg-sage py-24">
         <div className="mx-auto mb-14 max-w-2xl px-5 text-center">
@@ -71,13 +70,9 @@ export function HomeSections() {
         </div>
         <StoryBento chapters={CHAPTERS} />
       </section>
-      <LinesEcosystem />
       <BreedingSection />
       <NurseriesSection />
       <SolutionsSection />
-      <div className="bg-warm">
-        <SectionWave />
-      </div>
       <ResearchSection />
       <MapSection />
       <PartnersSection />

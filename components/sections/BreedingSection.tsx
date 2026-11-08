@@ -43,7 +43,7 @@ export function BreedingSection() {
   return (
     <section className="relative overflow-hidden bg-warm py-24" id="breeding">
       <MeshBackground variant="science" className="opacity-80" />
-      <DnaVines className="pointer-events-none absolute -left-10 top-10 h-full opacity-90 animate-float-slower" />
+      <DnaVines className="pointer-events-none absolute -left-10 top-10 h-full opacity-[0.08]" />
 
       <div className="container-site relative z-10">
         <Reveal>
@@ -60,7 +60,7 @@ export function BreedingSection() {
         {/* مسار العمل العلمي */}
         <Reveal delay={0.1}>
           <div className="relative mx-auto max-w-4xl">
-            <div className="absolute inset-x-8 top-8 h-px bg-gradient-to-l from-fresh/30 via-fresh to-lime/60" aria-hidden />
+            <div className="absolute inset-x-8 top-8 h-px bg-line" aria-hidden />
             <ol className="grid grid-cols-3 gap-y-8 md:grid-cols-6">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="relative flex flex-col items-center text-center">

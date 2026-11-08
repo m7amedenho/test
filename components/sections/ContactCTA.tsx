@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowLeft, MessageCircleHeart } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { MeshBackground } from "@/components/botanical/MeshBackground";
-import { SeedSphere } from "@/components/botanical/SeedSphere";
+import Image from "next/image";
+import { LANDING_IMAGES } from "@/lib/media";
 
 /** القسم 12 — دعوة ختامية أنيقة */
 export function ContactCTA() {
@@ -17,7 +18,7 @@ export function ContactCTA() {
           </p>
           <h2 className="heading-display text-3xl leading-snug text-deep md:text-5xl">
             دعنا نكون جزءًا من
-            <span className="bg-gradient-to-l from-pine via-fresh to-lime bg-clip-text text-transparent"> نجاحك الزراعي</span>
+            <span className="text-pine"> نجاحك الزراعي</span>
           </h2>
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink/65">
             فريقٌ من المهندسين الزراعيين والمختصين جاهز للرد على استفساراتكم وعلى زيارات ميدانية عبر محافظات مصر
@@ -40,7 +41,7 @@ export function ContactCTA() {
           </div>
         </Reveal>
         <Reveal delay={0.15} className="hidden lg:block">
-          <SeedSphere className="mx-auto w-72 opacity-90" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl"><Image src={LANDING_IMAGES.corn.src} alt={LANDING_IMAGES.corn.alt} fill sizes="420px" className="object-cover" /></div>
         </Reveal>
       </div>
     </section>

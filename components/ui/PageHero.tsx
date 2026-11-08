@@ -1,7 +1,6 @@
 // Hero فرعي موحد لكل الصفحات الداخلية
 import Link from "next/link";
 import { MeshBackground } from "@/components/botanical/MeshBackground";
-import { LeafGlyph } from "@/components/botanical/Leaves";
 
 export function PageHero({
   eyebrow,
@@ -15,7 +14,6 @@ export function PageHero({
   return (
     <section className="relative overflow-hidden border-b border-line bg-warm">
       <MeshBackground variant="soft" />
-      <LeafGlyph className="absolute -left-6 top-10 h-24 w-24 rotate-[210deg] opacity-25 animate-float-slow" />
       <div className="container-site relative z-10 flex flex-col gap-3 pb-14 pt-16 md:pb-16 md:pt-20">
         <nav aria-label="مسار التنقل" className="text-[12px] text-ink/45">
           <Link href="/" className="transition hover:text-pine">الرئيسية</Link>

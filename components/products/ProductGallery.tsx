@@ -21,12 +21,12 @@ export function ProductGallery({ images, name }: { images: WooImage[]; name: str
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.8rem] border border-line bg-mist">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line bg-white">
         {main ? (
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="group block h-full w-full cursor-zoom-in"
+            className="group relative block h-full w-full cursor-zoom-in"
             aria-label="تكبير الصورة"
           >
             <Image
@@ -35,7 +35,7 @@ export function ProductGallery({ images, name }: { images: WooImage[]; name: str
               fill
               priority
               sizes="(max-width: 1024px) 92vw, 560px"
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
             />
             <span className="absolute bottom-3 left-3 rounded-full bg-deep/70 px-3 py-1.5 text-[11px] font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
               تكبير الصورة ⤢
@@ -49,16 +49,17 @@ export function ProductGallery({ images, name }: { images: WooImage[]; name: str
       </div>
       {images.length > 1 && (
         <div className="grid grid-cols-5 gap-2.5">
-          {images.slice(0, 10).map((im, i) => (
+          {images.map((im, i) => (
             <button
               key={im.id}
-              onClick={() => setIdx(i)}
+              type="button"
+              onClick={() => { setIdx(i); setOpen(true); }}
               aria-label={`صورة ${i + 1}`}
               className={`relative aspect-square overflow-hidden rounded-xl border transition ${
                 i === idx ? "border-pine ring-2 ring-fresh/40" : "border-line hover:border-fresh"
               }`}
             >
-              <Image src={im.thumbnail || im.src} alt={im.alt || `${name} ${i + 1}`} fill sizes="100px" className="object-cover" />
+              <Image src={im.thumbnail || im.src} alt={im.alt || `${name} ${i + 1}`} fill sizes="100px" className="object-contain bg-white p-1" />
             </button>
           ))}
         </div>

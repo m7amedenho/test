@@ -4,7 +4,7 @@ import { ArrowLeft, Microscope, Sprout, ClipboardCheck, MapPinned } from "lucide
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LeafLine } from "@/components/botanical/Leaves";
-import { PICKS } from "@/lib/media";
+import { LANDING_IMAGES } from "@/lib/media";
 import { getWpPage } from "@/lib/wordpress";
 import { firstParagraph } from "@/lib/content";
 
@@ -27,8 +27,8 @@ export async function ResearchSection() {
           <div className="relative">
             <div className="overflow-hidden rounded-[2.2rem] soft-shadow">
               <Image
-                src={PICKS.trialField.src}
-                alt={PICKS.trialField.alt}
+                src={LANDING_IMAGES.rye.src}
+                alt={LANDING_IMAGES.rye.alt}
                 width={876}
                 height={1168}
                 sizes="(max-width: 1024px) 90vw, 520px"
@@ -37,8 +37,8 @@ export async function ResearchSection() {
             </div>
             <div className="absolute -bottom-6 -right-4 w-52 overflow-hidden rounded-[1.3rem] ring-6 ring-warm">
               <Image
-                src={PICKS.research.src}
-                alt={PICKS.research.alt}
+                src={LANDING_IMAGES.corn.src}
+                alt={LANDING_IMAGES.corn.alt}
                 width={640}
                 height={480}
                 sizes="220px"
@@ -46,7 +46,7 @@ export async function ResearchSection() {
               />
             </div>
             <span className="absolute -top-5 right-8 rounded-full card-glass px-5 py-2.5 text-[12px] font-bold text-deep">
-              تصوير حقيقي — من ضمن حقل تجارب الشركة
+              مشاهد زراعية توضيحية
             </span>
           </div>
         </Reveal>

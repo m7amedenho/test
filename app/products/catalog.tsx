@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { ProductCard } from "@/components/products/ProductCard";
 import { getWooCategories, getWooProductsPage } from "@/lib/woocommerce";
+import { getCropCategories } from "@/lib/crops";
 
 const PER_PAGE = 12;
 
@@ -20,8 +21,7 @@ export async function Catalog({
     getWooProductsPage({ page, perPage: PER_PAGE, search: q || undefined, category: cat || undefined }),
   ]);
 
-  const parentCat = categories.find((c) => c.parent === 0 && c.count > 10) ?? categories[0];
-  const cropCats = categories.filter((c) => c.parent === parentCat?.id && c.count > 0);
+  const cropCats = getCropCategories(categories);
 
   const href = (patch: Record<string, string | undefined>) => {
     const params = new URLSearchParams();

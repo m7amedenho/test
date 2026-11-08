@@ -1,37 +1,35 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { ChevronDown, Menu, X, ArrowLeft, Sprout } from "lucide-react";
+import { ArrowLeft, ChevronDown, Menu, Sprout, X } from "lucide-react";
 import type { WooCategory } from "@/types/wp";
 import { PRODUCT_LINES, type SiteContact } from "@/lib/productLines";
+import { getCropCategories } from "@/lib/crops";
 
-const NAV: { href: string; label: string }[] = [
+const MAIN_LINKS = [
   { href: "/", label: "الرئيسية" },
   { href: "/about", label: "من نحن" },
-  { href: "/products", label: "منتجاتنا" },
-  { href: "/breeding", label: "التهجين والتطوير الوراثي" },
   { href: "/nurseries", label: "المشاتل" },
-  { href: "/services", label: "الحلول والخدمات الزراعية" },
+  { href: "/services", label: "الخدمات الزراعية" },
+];
+
+const MORE_LINKS = [
+  { href: "/breeding", label: "التهجين والتطوير الوراثي" },
   { href: "/research", label: "البحث والتطوير" },
+  { href: "/branches", label: "الفروع والمواقع" },
   { href: "/news", label: "الأخبار والفعاليات" },
-  { href: "/contact", label: "تواصل معنا" },
 ];
 
 const BRAND = "أليكس للمستلزمات الزراعية";
-const LOGO = "/Alex.png";
 
 function Logo({ compact }: { compact: boolean }) {
   return (
-    <Link href="/" aria-label={`${BRAND} — الصفحة الرئيسية`} className="flex items-center transition-opacity hover:opacity-90">
-      <span
-        className={`relative block shrink-0 transition-[width,height] duration-300 ease-out ${
-          compact ? "h-11 w-11" : "h-[68px] w-[68px] sm:h-[76px] sm:w-[76px]"
-        }`}
-      >
-        <Image src={LOGO} alt={BRAND} fill sizes="(max-width: 640px) 68px, 76px" className="object-contain" priority />
+    <Link href="/" aria-label={`${BRAND} — الصفحة الرئيسية`} className="flex shrink-0 items-center">
+      <span className={`relative block transition-[width,height] duration-300 ease-out ${compact ? "h-12 w-12" : "h-[76px] w-[76px] sm:h-[88px] sm:w-[88px]"}`}>
+        <Image src="/Alex.png" alt={BRAND} fill sizes="(max-width: 640px) 76px, 88px" className="object-contain" priority />
       </span>
     </Link>
   );
@@ -40,245 +38,104 @@ function Logo({ compact }: { compact: boolean }) {
 export function Navbar({ categories }: { categories: WooCategory[]; contact: SiteContact }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [megaOpen, setMegaOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<"products" | "more" | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerProducts, setDrawerProducts] = useState(false);
-  const megaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cropCats = getCropCategories(categories);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
+    const onScroll = () => setScrolled(window.scrollY > 16);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    setMegaOpen(false);
-    setDrawerOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [drawerOpen]);
 
-  const openMega = () => {
-    if (megaTimer.current) clearTimeout(megaTimer.current);
-    setMegaOpen(true);
-  };
-  const closeMegaSoon = () => {
-    megaTimer.current = setTimeout(() => setMegaOpen(false), 120);
-  };
-
-  const active = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
-
-  const shopParent = categories.find((c) => c.parent === 0 && c.count > 10) ?? categories[0];
-  const cropCats = categories.filter((c) => c.parent === shopParent?.id && c.count > 0);
+  const active = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const closeMenus = () => { setOpenMenu(null); setDrawerOpen(false); };
+  const linkClass = (href: string) => `rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors ${active(href) ? "bg-sage text-deep" : "text-ink/75 hover:bg-mist hover:text-pine"}`;
 
   return (
-    <div className="relative" onMouseLeave={() => setMegaOpen(false)}>
-      <nav
-        className={`bg-warm/85 backdrop-blur-xl transition-all duration-300 ${
-          scrolled ? "border-b border-line shadow-[0_8px_30px_-18px_rgba(16,59,45,0.25)]" : ""
-        }`}
-      >
-        <div
-          className={`container-site flex items-center justify-between gap-4 transition-all ${
-            scrolled ? "h-14" : "h-24"
-          }`}
-        >
+    <div className="relative" onMouseLeave={() => setOpenMenu(null)} onKeyDown={(event) => { if (event.key === "Escape") { setOpenMenu(null); setDrawerOpen(false); } }} onClick={(event) => { if ((event.target as HTMLElement).closest("a")) closeMenus(); }}>
+      <nav className={`border-b bg-white/95 backdrop-blur-lg transition-shadow ${scrolled ? "border-line shadow-sm" : "border-transparent"}`} aria-label="القائمة الرئيسية">
+        <div className={`container-site flex items-center justify-between gap-4 transition-[height] duration-300 ${scrolled ? "h-16" : "h-[104px]"}`}>
           <Logo compact={scrolled} />
 
-          {/* روابط سطح المكتب */}
-          <ul className="hidden items-center gap-1 xl:flex text-[13.5px] font-medium">
-            {NAV.map((item) => {
-              const isProducts = item.href === "/products";
-              return (
-                <li key={item.href} onMouseEnter={isProducts ? openMega : undefined}>
-                  <Link
-                    href={item.href}
-                    className={`relative flex items-center gap-1 rounded-full px-3 py-2 transition-colors ${
-                      active(item.href) ? "text-deep" : "text-ink/70 hover:text-pine"
-                    }`}
-                  >
-                    {item.label}
-                    {isProducts && <ChevronDown size={13} className={`transition-transform ${megaOpen ? "rotate-180" : ""}`} />}
-                    <span
-                      className={`absolute inset-x-3 -bottom-0.5 h-[3px] rounded-full bg-gradient-to-l from-lime to-fresh transition-transform ${
-                        active(item.href) ? "scale-x-100" : "scale-x-0"
-                      }`}
-                      aria-hidden
-                    />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="flex items-center gap-2">
-            <Link
-              href="/contact"
-              className="group hidden items-center gap-2 rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_25px_-10px_rgba(16,59,45,0.5)] transition-all hover:bg-deep hover:shadow-[0_14px_30px_-10px_rgba(16,59,45,0.55)] sm:flex"
-            >
-              تواصل مع فريقنا
-              <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-            </Link>
-            <button
-              onClick={() => setDrawerOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-white text-pine xl:hidden"
-              aria-label="افتح القائمة"
-            >
-              <Menu size={20} />
+          <div className="hidden items-center gap-1 lg:flex">
+            {MAIN_LINKS.slice(0, 2).map((item) => <Link key={item.href} href={item.href} className={linkClass(item.href)}>{item.label}</Link>)}
+            <button type="button" onMouseEnter={() => setOpenMenu("products")} onClick={() => setOpenMenu(openMenu === "products" ? null : "products")} aria-expanded={openMenu === "products"} aria-controls="products-menu" className={`flex items-center gap-1 ${linkClass("/products")}`}>
+              منتجاتنا <ChevronDown size={14} className={openMenu === "products" ? "rotate-180" : ""} />
             </button>
+            {MAIN_LINKS.slice(2).map((item) => <Link key={item.href} href={item.href} onMouseEnter={() => setOpenMenu(null)} className={linkClass(item.href)}>{item.label}</Link>)}
+            <button type="button" onMouseEnter={() => setOpenMenu("more")} onClick={() => setOpenMenu(openMenu === "more" ? null : "more")} aria-expanded={openMenu === "more"} aria-controls="more-menu" className="flex items-center gap-1 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink/75 transition-colors hover:bg-mist hover:text-pine">
+              المزيد <ChevronDown size={14} className={openMenu === "more" ? "rotate-180" : ""} />
+            </button>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <Link href="/contact" className="hidden items-center gap-2 rounded-lg bg-pine px-4 py-2.5 text-[13px] font-bold text-white transition hover:bg-deep sm:flex">تواصل معنا <ArrowLeft size={15} /></Link>
+            <button type="button" onClick={() => setDrawerOpen(true)} className="flex h-11 w-11 items-center justify-center rounded-lg border border-line bg-white text-pine lg:hidden" aria-label="افتح القائمة" aria-expanded={drawerOpen}><Menu size={21} /></button>
           </div>
         </div>
       </nav>
 
-      {/* الميغا مينيو */}
-      <div
-        onMouseEnter={openMega}
-        onMouseLeave={() => {
-          if (megaTimer.current) clearTimeout(megaTimer.current);
-          setMegaOpen(false);
-        }}
-        className={`absolute inset-x-0 top-full z-40 transition-all duration-300 ${
-          megaOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0"
-        }`}
-      >
-        <div className="container-site">
-          <div className="card-glass mt-2 overflow-hidden rounded-3xl p-6 shadow-[0_40px_80px_-30px_rgba(16,59,45,0.35)]">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="flex items-center gap-2 text-sm font-bold text-deep">
-                <Sprout size={16} className="text-fresh" />
-                أصناف البذور — جميع محاصيلنا
-              </h3>
-              <Link href="/products" className="text-xs font-semibold text-pine hover:underline">
-                استعرض كل المنتجات ←
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              {cropCats.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/categories/${decodeURIComponent(cat.slug)}`}
-                  className="group flex flex-col gap-2 rounded-2xl border border-line/70 bg-white/70 p-2.5 transition-all hover:-translate-y-1 hover:border-fresh/50 hover:shadow-lg"
-                >
-                  <span className="relative block aspect-[4/3] overflow-hidden rounded-xl bg-mist">
-                    {cat.image?.src ? (
-                      <Image
-                        src={cat.image.src}
-                        alt={cat.image.alt || cat.name}
-                        fill
-                        sizes="(max-width: 768px) 45vw, 160px"
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : null}
-                  </span>
-                  <span className="text-[12.5px] font-semibold text-ink/85 group-hover:text-pine">{cat.name}</span>
-                  <span className="text-[10.5px] text-ink/40">{cat.count} صنف</span>
-                </Link>
-              ))}
-            </div>
-            <div className="mt-5 grid grid-cols-2 gap-2 border-t border-line/70 pt-4 sm:grid-cols-3 lg:grid-cols-6">
-              {PRODUCT_LINES.map((line) => (
-                <Link
-                  key={line.slug}
-                  href={line.href}
-                  className="rounded-xl px-3 py-2 text-[13px] font-medium text-ink/70 transition-colors hover:bg-sage hover:text-deep"
-                >
-                  {line.title}
-                </Link>
-              ))}
+      {openMenu === "products" && (
+        <div id="products-menu" className="pointer-events-none absolute inset-x-0 top-full z-40 hidden lg:block">
+          <div className="container-site">
+            <div className="pointer-events-auto grid max-h-[calc(100dvh-8rem)] grid-cols-[220px_minmax(0,1fr)] overflow-hidden rounded-b-2xl border border-line bg-white shadow-xl">
+              <div className="overflow-y-auto border-l border-line bg-mist p-5">
+                <p className="mb-3 text-xs font-bold text-ink/50">خطوط المنتجات</p>
+                <div className="space-y-1">{PRODUCT_LINES.map((line) => <Link key={line.slug} href={line.href} className="block rounded-lg px-3 py-2 text-sm font-semibold text-deep hover:bg-sage">{line.title}</Link>)}</div>
+                <Link href="/products" className="mt-4 flex items-center justify-between rounded-lg bg-pine px-3 py-2 text-xs font-bold text-white">كل المنتجات <ArrowLeft size={14} /></Link>
+              </div>
+              <div className="flex min-h-0 flex-col p-5">
+                <div className="mb-3 flex shrink-0 items-center justify-between gap-4">
+                  <p className="flex items-center gap-2 text-sm font-bold text-deep"><Sprout size={16} /> محاصيل البذور</p>
+                  <Link href="/seeds" className="text-xs font-bold text-pine hover:underline">صفحة البذور ←</Link>
+                </div>
+                <div className="min-h-0 overflow-y-auto overscroll-contain" aria-label="محاصيل البذور">
+                  <div className="grid grid-cols-2 gap-2 xl:grid-cols-3">
+                    {cropCats.map((cat) => <Link key={cat.id} href={`/categories/${decodeURIComponent(cat.slug)}`} className="flex items-center gap-2 rounded-lg border border-line p-2 text-xs font-semibold text-deep hover:border-fresh hover:bg-mist">
+                      <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-mist">{cat.image?.src && <Image src={cat.image.src} alt="" fill sizes="40px" className="object-cover" />}</span>
+                      <span className="min-w-0 truncate">{cat.name}</span>
+                    </Link>)}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* درج الموبايل */}
-      <div
-        className={`fixed inset-0 z-[60] xl:hidden ${drawerOpen ? "" : "pointer-events-none"}`}
-        aria-hidden={!drawerOpen}
-      >
-        <div
-          className={`absolute inset-0 bg-deep/40 backdrop-blur-sm transition-opacity ${drawerOpen ? "opacity-100" : "opacity-0"}`}
-          onClick={() => setDrawerOpen(false)}
-        />
-        <aside
-          className={`absolute inset-y-0 right-0 flex w-[86%] max-w-sm flex-col bg-warm shadow-2xl transition-transform duration-300 ${
-            drawerOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <div className="flex items-center justify-between border-b border-line px-5 py-4">
-            <Logo compact />
-            <button
-              onClick={() => setDrawerOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink/70"
-              aria-label="أغلق القائمة"
-            >
-              <X size={18} />
-            </button>
+      {openMenu === "more" && (
+        <div id="more-menu" className="pointer-events-none absolute inset-x-0 top-full z-40 hidden lg:block">
+          <div className="container-site flex justify-end"><div className="pointer-events-auto grid w-[420px] grid-cols-2 gap-1 rounded-b-xl border border-line bg-white p-3 shadow-xl">{MORE_LINKS.map((item) => <Link key={item.href} href={item.href} className="rounded-lg px-3 py-3 text-sm font-semibold text-deep hover:bg-mist">{item.label}</Link>)}</div></div>
+        </div>
+      )}
+
+      <div className={`fixed inset-0 z-[60] lg:hidden ${drawerOpen ? "" : "pointer-events-none"}`} aria-hidden={!drawerOpen}>
+        <div className={`absolute inset-0 bg-deep/40 transition-opacity ${drawerOpen ? "opacity-100" : "opacity-0"}`} onClick={() => setDrawerOpen(false)} />
+        <aside className={`absolute inset-y-0 right-0 flex w-[86%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}>
+          <div className="flex items-center justify-between border-b border-line px-5 py-3"><Logo compact /><button type="button" onClick={() => setDrawerOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-lg border border-line text-deep" aria-label="أغلق القائمة"><X size={20} /></button></div>
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4">
+            <div className="space-y-1">
+              {MAIN_LINKS.slice(0, 2).map((item) => <Link key={item.href} href={item.href} className={`block ${linkClass(item.href)}`}>{item.label}</Link>)}
+              <button type="button" onClick={() => setDrawerProducts(!drawerProducts)} aria-expanded={drawerProducts} className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-[13px] font-semibold text-deep hover:bg-mist">منتجاتنا <ChevronDown size={16} className={drawerProducts ? "rotate-180" : ""} /></button>
+              {drawerProducts && <div className="rounded-xl bg-mist p-3">
+                <Link href="/products" className="mb-3 block rounded-lg bg-pine px-3 py-2 text-center text-xs font-bold text-white">كل المنتجات</Link>
+                <p className="mb-2 text-xs font-bold text-pine">خطوط المنتجات</p>
+                <div className="mb-4 grid grid-cols-2 gap-1">{PRODUCT_LINES.map((line) => <Link key={line.slug} href={line.href} className="rounded-md bg-white px-2 py-2 text-xs font-semibold text-deep">{line.title}</Link>)}</div>
+                <p className="mb-2 text-xs font-bold text-pine">محاصيل البذور</p>
+                <div className="grid max-h-44 grid-cols-2 gap-1 overflow-y-auto overscroll-contain">{cropCats.map((cat) => <Link key={cat.id} href={`/categories/${decodeURIComponent(cat.slug)}`} className="rounded-md bg-white px-2 py-2 text-xs text-deep">{cat.name}</Link>)}</div>
+              </div>}
+              {MAIN_LINKS.slice(2).map((item) => <Link key={item.href} href={item.href} className={`block ${linkClass(item.href)}`}>{item.label}</Link>)}
+              {MORE_LINKS.map((item) => <Link key={item.href} href={item.href} className={`block ${linkClass(item.href)}`}>{item.label}</Link>)}
+            </div>
           </div>
-          <nav className="flex-1 overflow-y-auto px-3 py-4">
-            <ul className="space-y-1">
-              {NAV.slice(0, 3).map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`block rounded-xl px-4 py-3 text-[15px] font-semibold ${active(item.href) ? "bg-sage text-deep" : "text-ink/80 hover:bg-mist"}`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <button
-                  onClick={() => setDrawerProducts((v) => !v)}
-                  className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-[15px] font-semibold text-ink/80 hover:bg-mist"
-                >
-                  منتجاتنا — الأصناف
-                  <ChevronDown size={16} className={`transition-transform ${drawerProducts ? "rotate-180" : ""}`} />
-                </button>
-                {drawerProducts && (
-                  <div className="mt-1 grid grid-cols-2 gap-1.5 rounded-2xl bg-mist/60 p-2">
-                    {cropCats.slice(0, 12).map((cat) => (
-                      <Link
-                        key={cat.id}
-                        href={`/categories/${decodeURIComponent(cat.slug)}`}
-                        className="rounded-lg bg-white px-3 py-2 text-[12.5px] font-medium text-ink/75 hover:text-pine"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                    <Link href="/products" className="col-span-2 rounded-lg bg-pine px-3 py-2 text-center text-[12.5px] font-semibold text-white">
-                      كل الأصناف والمنتجات
-                    </Link>
-                  </div>
-                )}
-              </li>
-              {NAV.slice(3).map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`block rounded-xl px-4 py-3 text-[15px] font-semibold ${active(item.href) ? "bg-sage text-deep" : "text-ink/80 hover:bg-mist"}`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <div className="border-t border-line p-4">
-            <Link
-              href="/contact"
-              className="flex items-center justify-center gap-2 rounded-2xl bg-pine py-3.5 text-sm font-bold text-white"
-            >
-              تواصل مع فريقنا
-              <ArrowLeft size={16} />
-            </Link>
-          </div>
+          <div className="border-t border-line p-4"><Link href="/contact" className="block rounded-lg bg-pine px-4 py-3 text-center text-sm font-bold text-white">تواصل معنا</Link></div>
         </aside>
       </div>
     </div>

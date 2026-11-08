@@ -1,5 +1,6 @@
 import { Hero } from "@/components/hero/Hero";
 import { HomeSections } from "@/components/sections/HomeSections";
+import { CropsSection } from "@/components/sections/CropsSection";
 import { getSiteContact } from "@/lib/site";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -26,7 +27,8 @@ export default async function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero contact={contact} />
+      <Hero />
+      <CropsSection />
       <HomeSections />
     </>
   );

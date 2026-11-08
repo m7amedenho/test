@@ -3,10 +3,8 @@ import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { FloatingLeaves } from "@/components/botanical/Leaves";
-import { PICKS } from "@/lib/media";
+import { LANDING_IMAGES } from "@/lib/media";
 import { stripHtml, getWpPage } from "@/lib/wordpress";
-import type { SiteContact } from "@/lib/site";
 
 /** القسم 02 — تعريف بالشركة بتقسيم تحريري مع صور حقيقية ومؤشر قصة عمودي */
 export async function IntroSection() {
@@ -17,7 +15,6 @@ export async function IntroSection() {
 
   return (
     <section id="intro" className="relative overflow-hidden bg-warm py-24">
-      <FloatingLeaves />
       <div className="container-site grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <SectionHeading
@@ -54,8 +51,8 @@ export async function IntroSection() {
           <div className="relative">
             <div className="overflow-hidden rounded-[2.2rem] soft-shadow">
               <Image
-                src={PICKS.nursery.src}
-                alt={PICKS.nursery.alt}
+                src={LANDING_IMAGES.greenhouse.src}
+                alt={LANDING_IMAGES.greenhouse.alt}
                 width={1024}
                 height={683}
                 sizes="(max-width: 1024px) 92vw, 560px"
@@ -64,8 +61,8 @@ export async function IntroSection() {
             </div>
             <div className="absolute -bottom-8 -left-4 hidden w-44 overflow-hidden rounded-[1.3rem] ring-6 ring-warm sm:block">
               <Image
-                src={PICKS.peat.src}
-                alt={PICKS.peat.alt}
+                src={LANDING_IMAGES.rye.src}
+                alt={LANDING_IMAGES.rye.alt}
                 width={512}
                 height={384}
                 sizes="180px"

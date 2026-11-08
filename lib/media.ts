@@ -8,6 +8,16 @@ export interface PickedImage {
   height: number;
 }
 
+/** صور تحريرية عامة للصفحة الرئيسية؛ صور المحاصيل والمنتجات تأتي من WooCommerce. */
+export const LANDING_IMAGES: Record<"field" | "greenhouse" | "seedlings" | "grain" | "corn" | "rye", PickedImage> = {
+  field: { src: "/landing/field-rows.jpg", alt: "صفوف محاصيل خضراء في حقل زراعي", width: 1920, height: 1440 },
+  greenhouse: { src: "/landing/greenhouse.jpg", alt: "شتلات تنمو داخل صوبة زراعية", width: 1484, height: 2227 },
+  seedlings: { src: "/landing/seedlings.jpg", alt: "صفوف شتلات مزروعة في التربة", width: 1920, height: 1440 },
+  grain: { src: "/landing/green-grain.jpg", alt: "حقل حبوب أخضر", width: 1280, height: 852 },
+  corn: { src: "/landing/corn-field.jpg", alt: "حقل ذرة أخضر", width: 1920, height: 1280 },
+  rye: { src: "/landing/rye-field.jpg", alt: "سنابل حبوب خضراء في الحقل", width: 1920, height: 1280 },
+};
+
 /** صورة الشعار الحالية — أصل ثابت من الـ /public للاستخدام بجانب بيانات التواصل عند الحاجة */
 export function wpLogoUrl(): string {
   return `${MEDIA_BASE}/2023/04/لوجو-scaled.jpg`;
