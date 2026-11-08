@@ -1,13 +1,25 @@
 import Image from "next/image";
 import { Handshake } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
-import { getWooBrands } from "@/lib/woocommerce";
 
-/** القسم 10 — شراكات وعلامات حقيقية فقط (تُدار من WooCommerce Brands) */
-export async function PartnersSection() {
-  const brands = await getWooBrands();
-  const withLogos = brands.filter((b) => b.image?.src);
+/**
+ * شركاء النجاح — لوجوهات مستمدة من قاروس «شركاء النجاح» في الموقع الرسمي
+ * والمحمّلة كملفات ثابتة في public/partners/ (من وسائط الشركة الفعلية).
+ */
+const PARTNERS: { src: string; label: string }[] = [
+  { src: "/partners/partner-1.png", label: "شريك النجاح 1" },
+  { src: "/partners/partner-2.png", label: "شريك النجاح 2" },
+  { src: "/partners/partner-3.png", label: "شريك النجاح 3" },
+  { src: "/partners/partner-4.png", label: "شريك النجاح 4" },
+  { src: "/partners/partner-5.png", label: "شريك النجاح 5" },
+  { src: "/partners/partner-6.png", label: "شريك النجاح 6" },
+  { src: "/partners/partner-7.png", label: "شريك النجاح 7" },
+  { src: "/partners/partner-8.png", label: "شريك النجاح 8" },
+  { src: "/partners/partner-9.png", label: "شريك النجاح 9" },
+  { src: "/partners/partner-10.png", label: "شريك النجاح 10" },
+];
 
+export function PartnersSection() {
   return (
     <section className="relative overflow-hidden bg-mist py-20">
       <div className="container-site">
@@ -16,21 +28,23 @@ export async function PartnersSection() {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-pine shadow-lg ring-1 ring-line">
               <Handshake size={20} />
             </span>
-            <h2 className="heading-display text-2xl text-deep md:text-3xl">شراكات وعلامات عالمية نثق بها</h2>
-            {withLogos.length > 0 ? (
-              <div className="mt-4 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:grid-cols-6">
-                {withLogos.map((b) => (
-                  <div key={b.id} className="flex h-20 items-center justify-center rounded-2xl bg-white p-4 ring-1 ring-line transition hover:shadow-xl">
-                    <Image src={b.image!.src} alt={b.name} width={120} height={60} className="max-h-10 w-auto object-contain opacity-80 grayscale transition hover:grayscale-0" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="max-w-xl text-[13.5px] leading-relaxed text-ink/50">
-                تعمل أليكس عصفور بمروضات ومشاركات دولية مع شركات عالمية متعددة الجنسيات في مجال الخدمات الزراعية —
-                ستُعرض شعارات العلامات هنا تلقائيًا فور إضافتها من لوحة التحكم.
-              </p>
-            )}
+            <h2 className="heading-display text-2xl text-deep md:text-3xl">شركاء النجاح — شركات وعلامات نثق بها</h2>
+            <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+              {PARTNERS.map((p) => (
+                <div
+                  key={p.src}
+                  className="group flex h-24 items-center justify-center rounded-2xl bg-white p-4 ring-1 ring-line transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <Image
+                    src={p.src}
+                    alt={p.label}
+                    width={160}
+                    height={80}
+                    className="max-h-14 w-auto max-w-full object-contain opacity-85 grayscale transition duration-500 group-hover:grayscale-0"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </Reveal>
       </div>

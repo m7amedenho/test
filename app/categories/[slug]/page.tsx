@@ -20,13 +20,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!category) return { title: "تصنيف غير موجود" };
   return {
     title: `${category.name} — أصناف البذور`,
-    description: category.description || `استعرض أصناف ${category.name} المتاحة من أليكس عصفور.`,
+    description: category.description || `استعرض أصناف ${category.name} المتاحة من أليكس للمستلزمات الزراعية.`,
     alternates: { canonical: `/categories/${slug}` },
     openGraph: category.image?.src ? { images: [{ url: category.image.src }] } : undefined,
   };
 }
 
-export default async function CategoryPage({
+export default function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
+  return (
+    <Suspense fallback={<GridSkeleton label="جارٍ تحميل التصنيف…" />}>
+      <CategoryDetail params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function CategoryDetail({
   params,
   searchParams,
 }: {

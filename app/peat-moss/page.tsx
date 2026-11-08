@@ -6,7 +6,7 @@ const line = PRODUCT_LINES.find((l) => l.slug === "peat-moss")!;
 
 export const metadata: Metadata = {
   title: line.title,
-  description: "بيتموس هندي عالي الجودة، غير مُخصّب، غني بالعناصر الطبيعية وpH معتدل لضمان الإنبات السليم — أليكس عصفور.",
+  description: "بيتموس هندي عالي الجودة، غير مُخصّب، غني بالعناصر الطبيعية وpH معتدل لضمان الإنبات السليم — أليكس للمستلزمات الزراعية.",
   alternates: { canonical: "/peat-moss" },
 };
 

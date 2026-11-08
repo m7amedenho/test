@@ -13,7 +13,7 @@ import { notFoundText } from "@/lib/guards";
 export const metadata: Metadata = {
   title: "من نحن",
   description:
-    "شركة أليكس عصفور للمستلزمات الزراعية وعموم الاستيراد والتصدير — رائدة في تجارة البذور والشتلات والمستلزمات الزراعية في مصر والشرق الأوسط.",
+    "شركة أليكس للمستلزمات الزراعية وعموم الاستيراد والتصدير — رائدة في تجارة البذور والشتلات والمستلزمات الزراعية في مصر والشرق الأوسط.",
   alternates: { canonical: "/about" },
 };
 
@@ -39,7 +39,7 @@ export default async function AboutPage() {
       <PageHero
         eyebrow="من نحن"
         title="خبرة تنمو... ورؤية تمتد إلى المستقبل"
-        sub="شركة أليكس عصفور للمستلزمات الزراعية وعموم الاستيراد والتصدير"
+        sub="شركة أليكس للمستلزمات الزراعية وعموم الاستيراد والتصدير"
       />
 
       <section className="relative overflow-hidden bg-warm py-24">

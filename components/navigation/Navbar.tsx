@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, Menu, X, ArrowLeft, Sprout } from "lucide-react";
 import type { WooCategory } from "@/types/wp";
-import { logoUrl } from "@/lib/media";
 import { PRODUCT_LINES, type SiteContact } from "@/lib/productLines";
 
 const NAV: { href: string; label: string }[] = [
@@ -21,20 +20,18 @@ const NAV: { href: string; label: string }[] = [
   { href: "/contact", label: "تواصل معنا" },
 ];
 
+const BRAND = "أليكس للمستلزمات الزراعية";
+const LOGO = "/Alex.png";
+
 function Logo({ compact }: { compact: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="أليكس عصفور — الصفحة الرئيسية">
+    <Link href="/" aria-label={`${BRAND} — الصفحة الرئيسية`} className="flex items-center transition-opacity hover:opacity-90">
       <span
-        className="relative block overflow-hidden rounded-full ring-1 ring-line bg-white transition-all"
-        style={{ width: compact ? 34 : 40, height: compact ? 34 : 40 }}
+        className={`relative block shrink-0 transition-[width,height] duration-300 ease-out ${
+          compact ? "h-11 w-11" : "h-[68px] w-[68px] sm:h-[76px] sm:w-[76px]"
+        }`}
       >
-        <Image src={logoUrl()} alt="شعار أليكس عصفور" fill sizes="40px" className="object-cover" />
-      </span>
-      <span className="leading-tight">
-        <span className={`block font-bold text-pine transition-all ${compact ? "text-[15px]" : "text-lg"}`}>
-          أليكس عصفور
-        </span>
-        <span className="block text-[10px] text-ink/50">ALEX ASFOR · Agricultural Solutions</span>
+        <Image src={LOGO} alt={BRAND} fill sizes="(max-width: 640px) 68px, 76px" className="object-contain" priority />
       </span>
     </Link>
   );
@@ -90,7 +87,7 @@ export function Navbar({ categories }: { categories: WooCategory[]; contact: Sit
       >
         <div
           className={`container-site flex items-center justify-between gap-4 transition-all ${
-            scrolled ? "h-14" : "h-20"
+            scrolled ? "h-14" : "h-24"
           }`}
         >
           <Logo compact={scrolled} />

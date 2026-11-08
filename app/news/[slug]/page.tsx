@@ -43,7 +43,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
     headline: stripHtml(post.title?.rendered),
     datePublished: post.date,
     dateModified: post.modified ?? post.date,
-    author: { "@type": "Organization", name: "أليكس عصفور" },
+    author: { "@type": "Organization", name: "أليكس للمستلزمات الزراعية" },
     ...(hero ? { image: [hero] } : {}),
   };
 

@@ -1,7 +1,8 @@
 import { Hero } from "@/components/hero/Hero";
 import { HomeSections } from "@/components/sections/HomeSections";
 import { getSiteContact } from "@/lib/site";
-import { logoUrl } from "@/lib/media";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export default async function Home() {
   const contact = await getSiteContact();
@@ -10,10 +11,10 @@ export default async function Home() {
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "شركة أليكس عصفور للمستلزمات الزراعية",
-    alternateName: "Alex Asfor Agricultural Solutions",
-    url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-    logo: logoUrl(),
+    name: "أليكس للمستلزمات الزراعية",
+    alternateName: "Alex For Agricultural Supplies",
+    url: SITE_URL,
+    logo: `${SITE_URL}/Alex.png`,
     telephone: contact.phone,
     sameAs: [
       contact.socials.facebook,

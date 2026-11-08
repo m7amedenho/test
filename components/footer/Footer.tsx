@@ -4,9 +4,11 @@ import { Phone, MapPin } from "lucide-react";
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from "@/components/ui/SocialIcons";
 import { MeshBackground, SectionWave } from "@/components/botanical/MeshBackground";
 import { LeafGlyph } from "@/components/botanical/Leaves";
-import { logoUrl } from "@/lib/media";
 import { PRODUCT_LINES, type SiteContact } from "@/lib/site";
 import type { WooCategory } from "@/types/wp";
+
+const BRAND = "أليكس للمستلزمات الزراعية";
+const LOGO = "/Alex.png";
 
 const QUICK_LINKS = [
   { href: "/", label: "الرئيسية" },
@@ -34,15 +36,17 @@ export function Footer({ categories, contact }: { categories: WooCategory[]; con
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           {/* الهوية */}
           <div>
-            <div className="flex items-center gap-3">
-              <span className="relative block h-12 w-12 overflow-hidden rounded-full ring-2 ring-white/20">
-                <Image src={logoUrl()} alt="شعار أليكس عصفور" fill sizes="48px" className="object-cover" />
+            <Link href="/" aria-label={`${BRAND} — الصفحة الرئيسية`} className="inline-block">
+              <span className="relative block h-24 w-48">
+                <Image
+                  src={LOGO}
+                  alt={BRAND}
+                  fill
+                  sizes="192px"
+                  className="object-contain object-right"
+                />
               </span>
-              <div>
-                <p className="text-lg font-bold">أليكس عصفور</p>
-                <p className="text-[11px] text-white/50">ALEX ASFOR · Agricultural Solutions</p>
-              </div>
-            </div>
+            </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/65">
               شركة رائدة في تجارة البذور والشتلات والمستلزمات الزراعية عالية الجودة، تخدم الأسواق والعملاء في مصر
               والشرق الأوسط — من البذرة إلى الحصاد.
@@ -103,14 +107,14 @@ export function Footer({ categories, contact }: { categories: WooCategory[]; con
               <MapPin size={15} /> فروعنا ومواقع التغطية في محافظات مصر
             </Link>
             <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4 text-[12.5px] leading-relaxed text-white/55">
-              الشعار: <span className="text-lime">«من أجل مستقبل أفضل»</span> — موقع أليكس عصفور الرسمي، يتحدث
+              الشعار: <span className="text-lime">«من أجل مستقبل أفضل»</span> — الموقع الرسمي، تتحدث بياناته
               تلقائيًا من نظام إدارة المحتوى.
             </div>
           </div>
         </div>
 
         <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-[12.5px] text-white/40 sm:flex-row">
-          <p>© 2026 أليكس عصفور للمستلزمات الزراعية وعموم الاستيراد والتصدير. جميع الحقوق محفوظة.</p>
+          <p>© 2026 {BRAND} وعموم الاستيراد والتصدير. جميع الحقوق محفوظة.</p>
           <p>العربية · نسخة إنجليزية قريبًا</p>
         </div>
       </div>

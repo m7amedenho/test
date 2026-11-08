@@ -6,7 +6,7 @@ const line = PRODUCT_LINES.find((l) => l.slug === "seeds")!;
 
 export const metadata: Metadata = {
   title: line.title,
-  description: "بذور الخضروات الهجينة — أصناف متعددة ومدعومة بخدمات حقلية، من أليكس عصفور.",
+  description: "بذور الخضروات الهجينة — أصناف متعددة ومدعومة بخدمات حقلية، من أليكس للمستلزمات الزراعية.",
   alternates: { canonical: "/seeds" },
 };
 

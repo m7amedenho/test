@@ -4,6 +4,33 @@ export interface ContentSection {
   body: string;
 }
 
+/** فك فك ترميز كيانات HTML الشائعة في محتوى ووردبريس */
+export function decodeEntities(text: string): string {
+  const named: Record<string, string> = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#39;": "'",
+    "&apos;": "'",
+    "&nbsp;": " ",
+    "&ndash;": "–",
+    "&mdash;": "—",
+    "&hellip;": "…",
+  };
+  let out = text;
+  for (const [k, v] of Object.entries(named)) out = out.split(k).join(v);
+  return out
+    .replace(/&#(\d{2,5});/g, (_, n) => {
+      const num = Number(n);
+      return num > 31 && num < 65536 ? String.fromCodePoint(num) : " ";
+    })
+    .replace(/&#x[0-9a-fA-F]{2,5};/g, (m) => {
+      const num = parseInt(m.slice(3, -1), 16);
+      return num > 31 && num < 65536 ? String.fromCodePoint(num) : " ";
+    });
+}
+
 /** استخراج Couples أقسام (عنوان + نص) من HTML ووردبريس */
 export function extractSections(html: string | undefined): ContentSection[] {
   if (!html) return [];

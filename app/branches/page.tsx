@@ -6,7 +6,7 @@ import { getBranches } from "@/lib/branches";
 
 export const metadata: Metadata = {
   title: "الفروع والمواقع",
-  description: "فروع أليكس عصفور ومواقع مشاتلها ومديري مبيعاتها في محافظات مصر — لأن موقعنا قريب منك دائمًا.",
+  description: "فروع أليكس للمستلزمات الزراعية ومواقع مشاتلها ومديري مبيعاتها في محافظات مصر — لأن موقعنا قريب منك دائمًا.",
   alternates: { canonical: "/branches" },
 };
 

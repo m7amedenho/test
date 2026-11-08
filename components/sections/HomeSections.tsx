@@ -1,6 +1,7 @@
 import { Hero } from "@/components/hero/Hero";
 import { IntroSection } from "@/components/sections/IntroSection";
-import { StoryJourney, type StoryChapter } from "@/components/storytelling/StoryJourney";
+import { StoryBento, type StoryChapter } from "@/components/storytelling/StoryBento";
+import { StatsBar } from "@/components/sections/StatsBar";
 import { LinesEcosystem } from "@/components/sections/LinesEcosystem";
 import { BreedingSection } from "@/components/sections/BreedingSection";
 import { NurseriesSection } from "@/components/sections/NurseriesSection";
@@ -57,17 +58,18 @@ export function HomeSections() {
   return (
     <>
       <IntroSection />
-      {/* القسم 03 — القصة */}
+      <StatsBar />
+      {/* القسم 03 — قصة الشركة بشبكة Bento */}
       <section className="relative bg-sage py-24">
         <div className="mx-auto mb-14 max-w-2xl px-5 text-center">
           <p className="mb-4 flex items-center justify-center gap-3">
             <span className="h-2 w-2 rounded-full bg-fresh" />
-            <span className="text-[13px] font-bold tracking-wide text-pine">قصتنا — رواية سينمائية أثناء التمرير</span>
+            <span className="text-[13px] font-bold tracking-wide text-pine">قصتنا — أرضنا وأصنافنا وفريقنا</span>
             <span className="h-2 w-2 rounded-full bg-fresh" />
           </p>
-          <h2 className="heading-display text-3xl text-deep md:text-5xl">قصّتنا تتكشف مع تمريرك</h2>
+          <h2 className="heading-display text-3xl text-deep md:text-5xl">السطر الكامل من البذرة إلى الحصاد</h2>
         </div>
-        <StoryJourney chapters={CHAPTERS} />
+        <StoryBento chapters={CHAPTERS} />
       </section>
       <LinesEcosystem />
       <BreedingSection />

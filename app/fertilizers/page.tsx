@@ -6,7 +6,7 @@ const line = PRODUCT_LINES.find((l) => l.slug === "fertilizers")!;
 
 export const metadata: Metadata = {
   title: line.title,
-  description: "أسمدة زراعية موثوقة بمجموعات عناصر غذائية متنوعة لمحاصيل الخضروات والفواكه — أليكس عصفور.",
+  description: "أسمدة زراعية موثوقة بمجموعات عناصر غذائية متنوعة لمحاصيل الخضروات والفواكه — أليكس للمستلزمات الزراعية.",
   alternates: { canonical: "/fertilizers" },
 };
 

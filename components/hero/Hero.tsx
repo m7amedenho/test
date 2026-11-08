@@ -29,12 +29,12 @@ export function Hero({ contact }: { contact: SiteContact }) {
   const sphereY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -70]);
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-warm">
+    <section ref={ref} className="relative mx-3 mt-3 max-w-[1600px] overflow-hidden rounded-[2rem] bg-warm ring-1 ring-pine/10 sm:mx-6 sm:mt-5 sm:rounded-[2.75rem] 2xl:mx-auto">
       <MeshBackground variant="hero" />
       <LeafGlyph className="absolute right-[6%] top-28 h-24 w-24 rotate-[130deg] opacity-30 animate-float-slower" fromColor="#174B38" toColor="#C1E27A" />
       <LeafGlyph className="absolute left-[38%] top-16 h-12 w-12 -rotate-12 opacity-25 animate-float-slow" />
 
-      <div className="container-site relative z-10 grid min-h-[calc(100svh-116px)] items-center gap-10 pb-16 pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:pb-20 lg:pt-14">
+      <div className="container-site relative z-10 grid min-h-[calc(100svh-140px)] items-center gap-10 pb-16 pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:pb-20 lg:pt-14">
         {/* النص */}
         <motion.div variants={container} initial="hidden" animate="show" className="max-w-xl">
           <motion.p
@@ -45,7 +45,7 @@ export function Hero({ contact }: { contact: SiteContact }) {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-fresh opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-fresh" />
             </span>
-            أليكس عصفور — للمستلزمات الزراعية وعموم الاستيراد والتصدير
+            أليكس للمستلزمات الزراعية وعموم الاستيراد والتصدير
           </motion.p>
 
           <motion.h1 variants={item} className="heading-display text-[2.15rem] leading-[1.3] text-deep sm:text-5xl sm:leading-[1.28] lg:text-[3.4rem]">
@@ -65,7 +65,7 @@ export function Hero({ contact }: { contact: SiteContact }) {
           </motion.h1>
 
           <motion.p variants={item} className="mt-6 text-[15.5px] leading-relaxed text-ink/65 sm:text-lg">
-            في أليكس عصفور، نجمع بين الخبرة الزراعية والبحث العلمي والابتكار في تطوير البذور والشتلات والحلول
+            في أليكس للمستلزمات الزراعية، نجمع بين الخبرة الزراعية والبحث العلمي والابتكار في تطوير البذور والشتلات والحلول
             الزراعية المتكاملة — ودعم فني يعانق حقول مصر من الإسكندرية إلى أسوان.
           </motion.p>
 
@@ -74,7 +74,7 @@ export function Hero({ contact }: { contact: SiteContact }) {
               href="/about"
               className="group inline-flex items-center gap-2.5 rounded-full bg-pine px-7 py-4 text-[15px] font-bold text-white shadow-[0_18px_35px_-14px_rgba(16,59,45,0.55)] transition-all hover:-translate-y-0.5 hover:bg-deep"
             >
-              اكتشف عالم أليكس عصفور
+              اكتشف عالم أليكس للمستلزمات الزراعية
               <ArrowLeft size={17} className="transition-transform group-hover:-translate-x-1" />
             </Link>
             <Link

@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, PhoneCall, Tag, Layers } from "lucide-react";
 import { ProductGallery } from "@/components/products/ProductGallery";
+import { ProductBody, parseDashSections } from "@/components/products/ProductBody";
 import { ProductCard } from "@/components/products/ProductCard";
+import { GridSkeleton } from "@/components/ui/GridSkeleton";
 import { MeshBackground } from "@/components/botanical/MeshBackground";
 import { getWooProduct, getWooProducts } from "@/lib/woocommerce";
 import { getSiteContact } from "@/lib/site";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+/** معلمات البناء الثابتة — في فشل الجلب نُسقط مسارًا آمنًا بدل قائمة فارغة */
 export async function generateStaticParams() {
   const products = await getWooProducts();
   return products.length
@@ -22,9 +26,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const product = await getWooProduct(slug);
   if (!product) return { title: "صنف غير موجود" };
+  const cleanIntro = parseDashSections(product.short_description ?? "").intro ||
+    (product.short_description ?? "").replace(/<[^>]*>/g, " ");
   return {
     title: product.name,
-    description: (product.short_description ?? "").replace(/<[^>]*>/g, " ").slice(0, 160) || product.name,
+    description: cleanIntro.replace(/\s+/g, " ").trim().slice(0, 160) || product.name,
     alternates: { canonical: `/products/${slug}` },
     openGraph: {
       title: product.name,
@@ -33,7 +39,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+/** الغلاف: انتظار بيانات المنتج داخل Suspense حتى لا يعطّل فشل الرسل الغلاف الثابت */
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense fallback={<GridSkeleton label="جارٍ تحميل الصنف…" />}>
+      <ProductDetail params={params} />
+    </Suspense>
+  );
+}
+
+async function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [product, contact] = await Promise.all([getWooProduct(slug), getSiteContact()]);
   if (!product) notFound();
@@ -46,14 +61,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   const attributes = product.attributes ?? [];
 
+  // الوصف المختصر إن كان بصيغة «– النبات:- ...» نستخرج منه فقرة تعريفية نظيفة
+  const shortParsed = parseDashSections(product.short_description ?? "");
+  const hasDashIntro = shortParsed.sections.length > 0;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     category: cat?.name,
     image: product.images.map((i) => i.src),
-    description: (product.short_description ?? product.name).replace(/<[^>]*>/g, " ").trim(),
-    brand: { "@type": "Brand", name: "Alex Asfor" },
+    description: shortParsed.intro || product.name,
+    brand: { "@type": "Brand", name: "Alex For Agricultural Supplies" },
     ...(product.price ? { offers: { "@type": "Offer", price: product.price, priceCurrency: "EGP", availability: "https://schema.org/InStock" } } : {}),
   };
 
@@ -88,9 +107,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               )}
               <h1 className="heading-display text-2xl leading-snug text-deep md:text-[2rem]">{product.name}</h1>
 
-              {product.short_description && (
+              {shortParsed.intro && !hasDashIntro && (
                 <p className="mt-4 text-[14.5px] leading-loose text-ink/65">
-                  {product.short_description.replace(/<[^>]*>/g, " ").trim()}
+                  {shortParsed.intro}
                 </p>
               )}
 
@@ -136,13 +155,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
 
-          {product.description && (
+          {/* الوصف — منظف ومنظم دائماً */}
+          {(product.description || hasDashIntro || shortParsed.intro) && (
             <div className="mx-auto max-w-3xl pb-16">
               <h2 className="heading-display mb-5 border-r-4 border-fresh pr-4 text-xl text-deep">عن الصنف</h2>
-              <div
-                className="prose-asfor text-[14.5px] leading-loose text-ink/70 [&_a]:text-pine [&_img]:rounded-2xl [&_strong]:text-deep"
-                dangerouslySetInnerHTML={{ __html: product.description }}
-              />
+              {hasDashIntro ? (
+                <ProductBody html={product.short_description ?? ""} />
+              ) : (
+                <ProductBody html={product.description ?? ""} />
+              )}
             </div>
           )}
         </div>

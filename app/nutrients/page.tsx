@@ -6,7 +6,7 @@ const line = PRODUCT_LINES.find((l) => l.slug === "nutrients")!;
 
 export const metadata: Metadata = {
   title: line.title,
-  description: "مغذيات نباتية قوية سريعة المفعول تنشط المجموع الجذري والخضري وتوفر العناصر الصغرى والكبرى — أليكس عصفور.",
+  description: "مغذيات نباتية قوية سريعة المفعول تنشط المجموع الجذري والخضري وتوفر العناصر الصغرى والكبرى — أليكس للمستلزمات الزراعية.",
   alternates: { canonical: "/nutrients" },
 };
 

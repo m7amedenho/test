@@ -7,7 +7,7 @@ export default function Loading() {
           <span className="absolute inset-0 animate-spin rounded-full border-[3px] border-transparent border-t-fresh" />
           <span className="absolute inset-[30%] rounded-full bg-lime/70 animate-pulse-soft" />
         </div>
-        <p className="text-[13px] font-semibold text-pine">تحميل المحتوى من أليكس عصفور…</p>
+        <p className="text-[13px] font-semibold text-pine">تحميل المحتوى من أليكس للمستلزمات الزراعية…</p>
       </div>
     </div>
   );

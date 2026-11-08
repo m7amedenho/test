@@ -11,7 +11,7 @@ import { getSiteContact, getSiteContact as _g } from "@/lib/site";
 export const metadata: Metadata = {
   title: "تواصل معنا",
   description:
-    "تواصل مع فريق أليكس عصفور — مكالمات مباشرة وتغطية ميدانية عبر محافظات مصر، نرد على استفساراتك طوال العام.",
+    "تواصل مع فريق أليكس للمستلزمات الزراعية — مكالمات مباشرة وتغطية ميدانية عبر محافظات مصر، نرد على استفساراتك طوال العام.",
   alternates: { canonical: "/contact" },
 };
 
